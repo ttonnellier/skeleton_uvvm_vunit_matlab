@@ -28,7 +28,7 @@ TL = VU.add_library("test_library")
 TL.add_source_files(TST_PATH / "*.vhd")
 
 # Set Modelsim options
-os.environ["VUNIT_MODELSIM_INI"] = Path(__file__).resolve().parent.parent.stem + "sim/modelsim.ini"
+os.environ["VUNIT_MODELSIM_INI"] = str(Path(__file__).resolve().parent.parent) + "/sim/modelsim.ini"
 VU.set_sim_option("modelsim.vsim_flags", ["-stats=-cmd,-time"])
 
 # Generate data set via Matlab
@@ -38,7 +38,7 @@ else:
     Matlab_Params = namedtuple('Matlab_Params', 'path awidth bwidth cwidth samples')
     matlab_params = Matlab_Params(DAT_PATH.absolute(), AWIDTH, BWIDTH, CWIDTH, SAMPLES)
     print("## Generating data via Matlab")
-    proc =  subprocess.Popen("matlab -batch \"cd(\'{params.path}\'); generate_data_preAddMultAdd({params.awidth},{params.bwidth},{params.cwidth},{params.samples}); exit\"".format(params=matlab_params))
+    proc =  subprocess.Popen("matlab -batch \"cd(\'{params.path}\'); datagen_preAddMultAdd({params.awidth},{params.bwidth},{params.cwidth},{params.samples}); exit\"".format(params=matlab_params))
     exit_code = proc.wait()
     if exit_code == 0:
         print("#### Data generated")
@@ -56,12 +56,12 @@ for tb in benches:
     benches[tb].set_generic("BWIDTH", BWIDTH)
     benches[tb].set_generic("CWIDTH", CWIDTH)
 
-for tb in benches
+for tb in benches:
     benches[tb].add_config(
             name="pass",
-            generics=dict(FILE_IN=preAddMultAdd_matlab_in.txt, FILE_OUT=preAddMultAdd_matlab_out.txt))
+            generics=dict(FILE_IN="preAddMultAdd_matlab_in.txt", FILE_OUT="preAddMultAdd_matlab_out.txt"))
     benches[tb].add_config(
             name="fail",
-            generics=dict(FILE_IN=preAddMultAdd_matlab_in_errors.txt, FILE_OUT=preAddMultAdd_matlab_out_errors.txt))
+            generics=dict(FILE_IN="preAddMultAdd_matlab_in_errors.txt", FILE_OUT="preAddMultAdd_matlab_out_errors.txt"))
 
 VU.main()

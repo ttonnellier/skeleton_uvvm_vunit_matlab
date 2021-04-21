@@ -1,2 +1,5 @@
 work
 
+scripts/vunit_out/
+
+sim/data/*.txt
