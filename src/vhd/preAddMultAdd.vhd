@@ -15,19 +15,20 @@ entity preAddMultAdd is
         bin    : in  std_logic_vector(BWIDTH - 1 downto 0);
         cin    : in  std_logic_vector(CWIDTH - 1 downto 0);
         din    : in  std_logic_vector(BWIDTH + CWIDTH downto 0);
-        pout   : out std_logic_vector(BWIDTH + CWIDTH downto 0);
+        pout   : out std_logic_vector(BWIDTH + CWIDTH +1 downto 0);
         d_valid: out std_logic
     );
 end preAddMultAdd;
 
 
 architecture rtl of preAddMultAdd is
-    signal subadd_d              : std_logic;
-    signal a                     : signed(AWIDTH - 1 downto 0);
-    signal b                     : signed(BWIDTH - 1 downto 0);
-    signal c, c_d                : signed(CWIDTH - 1 downto 0);
-    signal add                   : signed(BWIDTH downto 0);
-    signal d, d_d, d_dd, mult, p : signed(BWIDTH + CWIDTH downto 0);
+    signal subadd_d           : std_logic;
+    signal a                  : signed(AWIDTH - 1 downto 0);
+    signal b                  : signed(BWIDTH - 1 downto 0);
+    signal c, c_d             : signed(CWIDTH - 1 downto 0);
+    signal add                : signed(BWIDTH downto 0);
+    signal d, d_d, d_dd, mult : signed(BWIDTH + CWIDTH downto 0);
+    signal p                  : signed(BWIDTH + CWIDTH + 1 downto 0);
 begin
     
     assert BWIDTH >= AWIDTH report "Size not supported." severity error;
@@ -52,7 +53,7 @@ begin
                 add <= resize(a, BWIDTH + 1) + resize(b, BWIDTH + 1);
             end if;
             mult <= add * c_d;
-            p    <= mult + d_dd;
+            p    <= resize(mult, p'length) + resize(d_dd, p'length);
         end if;
     end process;
 

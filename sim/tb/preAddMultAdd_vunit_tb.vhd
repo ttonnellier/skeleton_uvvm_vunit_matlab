@@ -41,8 +41,8 @@ architecture functional of preAddMultAdd_vunit_tb is
     signal b_in      : std_logic_vector(BWIDTH - 1 downto 0);
     signal c_in      : std_logic_vector(CWIDTH - 1 downto 0);
     signal d_in      : std_logic_vector(BWIDTH + CWIDTH downto 0);
-    signal p_out     : std_logic_vector(BWIDTH + CWIDTH downto 0);
-    signal p_expected: std_logic_vector(BWIDTH + CWIDTH downto 0);
+    signal p_out     : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
+    signal p_expected: std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
 
     signal process_ena : boolean := false;
     signal process_checker_over: boolean := false;

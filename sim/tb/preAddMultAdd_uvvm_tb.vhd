@@ -48,15 +48,15 @@ architecture functional of preAddMultAdd_uvvm_tb is
     signal b_in      : std_logic_vector(BWIDTH - 1 downto 0);
     signal c_in      : std_logic_vector(CWIDTH - 1 downto 0);
     signal d_in      : std_logic_vector(BWIDTH + CWIDTH downto 0);
-    signal p_out     : std_logic_vector(BWIDTH + CWIDTH downto 0);
-    signal p_expected: std_logic_vector(BWIDTH + CWIDTH downto 0);
+    signal p_out     : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
+    signal p_expected: std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
 
     signal process_ena : boolean := false;
     signal process_checker_over: boolean := false;
 
     -- scoreboard parameters
     package my_tb_sb_pkg is new bitvis_vip_scoreboard.generic_sb_pkg
-    generic map (t_element =>  std_logic_vector(BWIDTH+CWIDTH downto 0),
+    generic map (t_element =>  std_logic_vector(BWIDTH+CWIDTH+1 downto 0),
                  element_match => std_match,
                  to_string_element => to_string);
     --use my_tb_sb_pkg.all;
@@ -101,7 +101,7 @@ architecture functional of preAddMultAdd_uvvm_tb is
         end loop;
         read(current_line, P);
         P_sig <= std_logic_vector(to_signed(P, P_sig'length));
-        TB_SB.add_expected(std_logic_vector(to_signed(P, P_sig'length)), "Adding expected data to SB");
+        TB_SB.add_expected(std_logic_vector(to_signed(P, P_sig'length)));
     end;
 
 begin
