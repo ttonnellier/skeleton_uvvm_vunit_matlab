@@ -9,14 +9,14 @@ entity preAddMultAdd is
         CWIDTH : natural := 17
     );
     port(
-        clk    : in  std_logic;
-        subadd : in  std_logic;
-        ain    : in  std_logic_vector(AWIDTH - 1 downto 0);
-        bin    : in  std_logic_vector(BWIDTH - 1 downto 0);
-        cin    : in  std_logic_vector(CWIDTH - 1 downto 0);
-        din    : in  std_logic_vector(BWIDTH + CWIDTH downto 0);
-        pout   : out std_logic_vector(BWIDTH + CWIDTH +1 downto 0);
-        d_valid: out std_logic
+        clk     : in  std_logic;
+        subadd  : in  std_logic;
+        ain     : in  std_logic_vector(AWIDTH - 1 downto 0);
+        bin     : in  std_logic_vector(BWIDTH - 1 downto 0);
+        cin     : in  std_logic_vector(CWIDTH - 1 downto 0);
+        din     : in  std_logic_vector(BWIDTH + CWIDTH downto 0);
+        pout    : out std_logic_vector(BWIDTH + CWIDTH +1 downto 0);
+        d_valid : out std_logic
     );
 end preAddMultAdd;
 

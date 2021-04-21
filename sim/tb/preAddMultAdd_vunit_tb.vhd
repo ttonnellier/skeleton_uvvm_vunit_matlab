@@ -11,13 +11,13 @@ library design_library;
 
 entity preAddMultAdd_vunit_tb is
      generic (
-        runner_cfg: string := runner_cfg_default;
-        DATA_PATH : string := "../data/";
-        FILE_IN   : string := "preAddMultAdd_in.txt";
-        FILE_OUT  : string := "preAddMultAdd_out.txt";
-        AWIDTH : natural := 8;
-        BWIDTH : natural := 8;
-        CWIDTH : natural := 8
+        runner_cfg : string  := runner_cfg_default;
+        DATA_PATH  : string  := "../data/";
+        FILE_IN    : string  := "preAddMultAdd_in.txt";
+        FILE_OUT   : string  := "preAddMultAdd_out.txt";
+        AWIDTH     : natural := 8;
+        BWIDTH     : natural := 8;
+        CWIDTH     : natural := 8
     );
 end entity;
 
@@ -32,19 +32,19 @@ architecture functional of preAddMultAdd_vunit_tb is
     file golden_data_out: text open read_mode is DATA_PATH & FILE_OUT;
 
     -- general control signals
-    signal clk        : std_logic := '0';
-    signal clk_ena    : boolean   := false;
+    signal clk     : std_logic := '0';
+    signal clk_ena : boolean   := false;
 
     -- internal signals
-    signal subadd    : std_logic;
-    signal a_in      : std_logic_vector(AWIDTH - 1 downto 0);
-    signal b_in      : std_logic_vector(BWIDTH - 1 downto 0);
-    signal c_in      : std_logic_vector(CWIDTH - 1 downto 0);
-    signal d_in      : std_logic_vector(BWIDTH + CWIDTH downto 0);
-    signal p_out     : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
-    signal p_expected: std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
+    signal subadd     : std_logic;
+    signal a_in       : std_logic_vector(AWIDTH - 1 downto 0);
+    signal b_in       : std_logic_vector(BWIDTH - 1 downto 0);
+    signal c_in       : std_logic_vector(CWIDTH - 1 downto 0);
+    signal d_in       : std_logic_vector(BWIDTH + CWIDTH downto 0);
+    signal p_out      : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
+    signal p_expected : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
 
-    signal process_ena : boolean := false;
+    signal process_ena         : boolean := false;
     signal process_checker_over: boolean := false;
 
     -- procedures to read from files 
@@ -52,9 +52,9 @@ architecture functional of preAddMultAdd_vunit_tb is
         signal A_sig, B_sig, C_sig, D_sig : out std_logic_vector;
         signal SUBADD_sig                 : out std_logic
     ) is
-        variable current_line: line;
-        variable A, B, C, D  : integer;
-        variable SUBADD      : std_logic;
+        variable current_line : line;
+        variable A, B, C, D   : integer;
+        variable SUBADD       : std_logic;
     begin
         readline(golden_data_in, current_line);
         while current_line.all(1) = '#' and not endfile(golden_data_in) loop
@@ -106,11 +106,11 @@ begin
                                                           CWIDTH => CWIDTH) 
                                              port map (clk    => clk   ,
                                                        subadd => subadd,
-                                                       ain    => a_in   ,
-                                                       bin    => b_in   ,
-                                                       cin    => c_in   ,
-                                                       din    => d_in   ,
-                                                       pout   => p_out  );
+                                                       ain    => a_in  ,
+                                                       bin    => b_in  ,
+                                                       cin    => c_in  ,
+                                                       din    => d_in  ,
+                                                       pout   => p_out );
 
     stimulus_generator: process
     begin
@@ -141,7 +141,7 @@ begin
     begin
         test_runner_setup(runner, runner_cfg);
 
-        set_stop_level(failure);
+        set_stop_level(failure); -- to allow the test to continue on errors
         show(get_logger(default_checker), display_handler, pass);
 
         clk_ena <= true;

@@ -17,7 +17,7 @@ Two testbenches are provided: one that only uses Vunit, another that also uses U
 If you don't already have it, simply install the [Intel FPGA Starter Edition](https://fpgasoftware.intel.com/?product=modelsim_ae#tabs-2)
 
 ### VUnit installation
-Just follow [these instructions](https://vunit.github.io/installing.html#using-the-python-package-manager) for a simple installation.
+Just follow [these instructions](https://vunit.github.io/installing.html#using-the-python-package-manager).
 
 
 ### UVVM installation

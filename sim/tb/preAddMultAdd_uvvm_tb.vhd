@@ -17,13 +17,13 @@ library design_library;
 
 entity preAddMultAdd_uvvm_tb is
      generic (
-        runner_cfg: string := "";
-        DATA_PATH : string := "../data/";
-        FILE_IN   : string := "preAddMultAdd_in.txt";
-        FILE_OUT  : string := "preAddMultAdd_out.txt";
-        AWIDTH : natural := 8;
-        BWIDTH : natural := 8;
-        CWIDTH : natural := 8
+        runner_cfg : string  := "";
+        DATA_PATH  : string  := "../data/";
+        FILE_IN    : string  := "preAddMultAdd_in.txt";
+        FILE_OUT   : string  := "preAddMultAdd_out.txt";
+        AWIDTH     : natural := 8;
+        BWIDTH     : natural := 8;
+        CWIDTH     : natural := 8
     );
 end entity;
 
@@ -35,24 +35,24 @@ architecture functional of preAddMultAdd_uvvm_tb is
     constant C_DELAY      : time   :=  1 ns;
 
     -- files
-    file golden_data_in : text open read_mode is DATA_PATH & FILE_IN;
-    file golden_data_out: text open read_mode is DATA_PATH & FILE_OUT;
+    file golden_data_in  : text open read_mode is DATA_PATH & FILE_IN;
+    file golden_data_out : text open read_mode is DATA_PATH & FILE_OUT;
 
     -- general control signals
-    signal clk        : std_logic := '0';
-    signal clk_ena    : boolean   := false;
+    signal clk     : std_logic := '0';
+    signal clk_ena : boolean   := false;
 
     -- internal signals
-    signal subadd    : std_logic;
-    signal a_in      : std_logic_vector(AWIDTH - 1 downto 0);
-    signal b_in      : std_logic_vector(BWIDTH - 1 downto 0);
-    signal c_in      : std_logic_vector(CWIDTH - 1 downto 0);
-    signal d_in      : std_logic_vector(BWIDTH + CWIDTH downto 0);
-    signal p_out     : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
-    signal p_expected: std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
+    signal subadd     : std_logic;
+    signal a_in       : std_logic_vector(AWIDTH - 1 downto 0);
+    signal b_in       : std_logic_vector(BWIDTH - 1 downto 0);
+    signal c_in       : std_logic_vector(CWIDTH - 1 downto 0);
+    signal d_in       : std_logic_vector(BWIDTH + CWIDTH downto 0);
+    signal p_out      : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
+    signal p_expected : std_logic_vector(BWIDTH + CWIDTH + 1 downto 0);
 
-    signal process_ena : boolean := false;
-    signal process_checker_over: boolean := false;
+    signal process_ena          : boolean := false;
+    signal process_checker_over : boolean := false;
 
     -- scoreboard parameters
     package my_tb_sb_pkg is new bitvis_vip_scoreboard.generic_sb_pkg
@@ -113,11 +113,11 @@ begin
                                                           CWIDTH => CWIDTH) 
                                              port map (clk    => clk   ,
                                                        subadd => subadd,
-                                                       ain    => a_in   ,
-                                                       bin    => b_in   ,
-                                                       cin    => c_in   ,
-                                                       din    => d_in   ,
-                                                       pout   => p_out  );
+                                                       ain    => a_in  ,
+                                                       bin    => b_in  ,
+                                                       cin    => c_in  ,
+                                                       din    => d_in  ,
+                                                       pout   => p_out );
 
     stimulus_generator: process
     begin
