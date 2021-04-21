@@ -17,8 +17,8 @@ Two testbenches are provided: one that only uses Vunit, another that also uses U
 If you don't already have it, simply install the [Intel FPGA Starter Edition](https://fpgasoftware.intel.com/?product=modelsim_ae#tabs-2)
 
 ### VUnit installation
-Just follow [these instructions](https://vunit.github.io/installing.html#using-the-python-package-manager) for a simple installation.  
-Or [these ones](https://vunit.github.io/installing.html#for-vunit-developers) if you want to modify the VUnit sources
+Just follow [these instructions](https://vunit.github.io/installing.html#using-the-python-package-manager) for a simple installation.
+
 
 ### UVVM installation
 In the folder where you want to install UVVM, proceed to the following:
@@ -34,9 +34,14 @@ After cloning this repo and installing the required tools:
 1. Open the file sim/modelsim.ini
 2. Find the section UVVM librairies
 3. Update the different paths to reflect your installation and close the file
-
-4. Open the file script/run.py
-5. 
 ``` 
 
-
+## Run 
+```
+python run.py
+```
+or, if you already generated the data and don't want to relaunch matlab, because it's a stupidly heavy tool:
+```
+python run.py --no_data_gen
+```
+For VUnit CLI options, please have a look [there](https://vunit.github.io/cli.html).

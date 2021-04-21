@@ -24,8 +24,8 @@ end entity;
 architecture functional of preAddMultAdd_vunit_tb is
 
     -- constants
-    constant C_CLK_PERIOD : time   := 10 ns;
-    constant C_DELAY      : time   :=  1 ns;
+    constant CLK_PERIOD : time   := 10 ns;
+    constant DELAY      : time   :=  1 ns;
 
     -- files
     file golden_data_in : text open read_mode is DATA_PATH & FILE_IN;
@@ -96,9 +96,9 @@ begin
             wait until clk_ena;
         end if;
         clk <= '1';
-        wait for C_CLK_PERIOD/2;
+        wait for CLK_PERIOD/2;
         clk <= '0';
-        wait for C_CLK_PERIOD/2;
+        wait for CLK_PERIOD/2;
     end process;
 
     dut: entity design_library.preAddMultAdd generic map (AWIDTH => AWIDTH,
@@ -115,10 +115,10 @@ begin
     stimulus_generator: process
     begin
         wait until process_ena;
-        wait for C_CLK_PERIOD/2;
+        wait for CLK_PERIOD/2;
         while not endfile(golden_data_in) loop
             read_golden_vectors_in(a_in, b_in, c_in, d_in, subadd);
-            wait for C_CLK_PERIOD;
+            wait for CLK_PERIOD;
         end loop;
         wait;
     end process;
@@ -126,10 +126,10 @@ begin
     response_checker: process
     begin
         wait until process_ena;
-        wait for 4*C_CLK_PERIOD;
+        wait for 4*CLK_PERIOD;
         while not endfile(golden_data_out) loop
             read_golden_vectors_out(p_expected);
-            wait for C_DELAY;
+            wait for DELAY;
             check_equal(p_expected, p_out, result("for result of preAddMultAddt"));
             wait until rising_edge(clk);
         end loop;
@@ -139,9 +139,7 @@ begin
 
     p_sequencer : process
     begin
-        if runner_cfg /= "" then
-            test_runner_setup(runner, runner_cfg);
-        end if;
+        test_runner_setup(runner, runner_cfg);
 
         set_stop_level(failure);
         show(get_logger(default_checker), display_handler, pass);
@@ -154,11 +152,7 @@ begin
 
         info("===Summary===" & LF & to_string(get_checker_stat));
         
-        if runner_cfg /= "" then
-          test_runner_cleanup(runner);
-        else
-          std.env.finish;
-        end if;
+        test_runner_cleanup(runner);
 
         wait;
     end process;

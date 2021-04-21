@@ -26,4 +26,14 @@ function [] = generate_data_preAddMultAdd(AWIDTH, BWIDTH, CWIDTH, data_number)
     fprintf(FOUT, '%d\n', OUTP);
     fprintf(FOUT, '%d\n', OUTM);
     fclose(FOUT);
+
+    FIN  = fopen('preAddMultAdd_matlab_in_errors.txt', 'w');
+    fprintf(FIN, '%d %d %d %d 1\n', WT);
+    fprintf(FIN, '%d %d %d %d 1\n', WT);
+    fclose(FIN);
+    
+    FOUT = fopen('preAddMultAdd_matlab_out_errors.txt', 'w');
+    fprintf(FOUT, '%d\n', OUTP);
+    fprintf(FOUT, '%d\n', OUTM);
+    fclose(FOUT);
 end
