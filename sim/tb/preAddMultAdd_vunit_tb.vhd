@@ -17,8 +17,7 @@ entity preAddMultAdd_vunit_tb is
         FILE_OUT   : string  := "preAddMultAdd_out.txt";
         AWIDTH     : natural := 8;
         BWIDTH     : natural := 8;
-        CWIDTH     : natural := 8
-    );
+        CWIDTH     : natural := 8);
 end entity;
 
 architecture functional of preAddMultAdd_vunit_tb is
@@ -46,6 +45,9 @@ architecture functional of preAddMultAdd_vunit_tb is
 
     signal process_ena         : boolean := false;
     signal process_checker_over: boolean := false;
+
+    signal data_count_stim : integer := 0;
+    signal data_count_resp : integer := 0;
 
     -- procedures to read from files 
     procedure read_golden_vectors_in(
@@ -87,6 +89,13 @@ architecture functional of preAddMultAdd_vunit_tb is
         P_sig <= std_logic_vector(to_signed(P, P_sig'length));
     end;
 
+    -- loggers
+    constant seq_logger   : logger_t := get_logger("log:sequencer");
+    constant stim_logger  : logger_t := get_logger("log:sub:stimulus");
+    constant resp_logger  : logger_t := get_logger("log:sub:response");
+    -- checkers
+    constant file_checker   : checker_t := new_checker("check:file");
+    constant sanity_checker : checker_t := new_checker("check:sanity");
 begin
 
     p_clk: process
@@ -117,6 +126,8 @@ begin
         wait until process_ena;
         wait for CLK_PERIOD/2;
         while not endfile(golden_data_in) loop
+            data_count_stim <= data_count_stim +1;    
+            debug(resp_logger, "Read data in #" & integer'image(data_count_stim));
             read_golden_vectors_in(a_in, b_in, c_in, d_in, subadd);
             wait for CLK_PERIOD;
         end loop;
@@ -128,9 +139,11 @@ begin
         wait until process_ena;
         wait for 4*CLK_PERIOD;
         while not endfile(golden_data_out) loop
+            data_count_resp <= data_count_resp +1;
+            debug(resp_logger, "Read data out #" & integer'image(data_count_resp));
             read_golden_vectors_out(p_expected);
             wait for DELAY;
-            check_equal(p_expected, p_out, result("for result of preAddMultAddt"));
+            check_equal(file_checker, p_expected, p_out, result("for result of preAddMultAddt"));
             wait until rising_edge(clk);
         end loop;
         process_checker_over <= true;
@@ -138,23 +151,35 @@ begin
     end process;
 
     p_sequencer : process
+        procedure set_visibility_of_loggers_and_checker is
+        begin
+            show(get_logger("check"), display_handler, pass); -- to see "pass" messages
+            --show(get_logger("log:sub"), display_handler, debug);
+        end;
+        procedure launch_processes is
+        begin
+            clk_ena <= true;
+            process_ena <= true;
+            info(seq_logger, "Process Launched!");
+        end;
+        procedure summary is
+        begin
+            check_equal(sanity_checker, data_count_resp, data_count_stim, result("for number of comparisons"), warning);
+            info(seq_logger, "===Summary===" & LF & "file_checker: "   & to_string(get_checker_stat(file_checker))
+                                            & LF & "sanity_checker: " & to_string(get_checker_stat(sanity_checker)));
+        end;
     begin
         test_runner_setup(runner, runner_cfg);
-
         set_stop_level(failure); -- to allow the test to continue on errors
-        show(get_logger(default_checker), display_handler, pass);
+        set_visibility_of_loggers_and_checker;
 
-        clk_ena <= true;
-        process_ena <= true;
-        info("Process Launched!");
-
+        launch_processes;
         wait until process_checker_over;
 
-        info("===Summary===" & LF & to_string(get_checker_stat));
-        
+        summary;
         test_runner_cleanup(runner);
-
-        wait;
+        std.env.finish;
     end process;
-
+    
+    test_runner_watchdog(runner, 10 ms);
 end architecture;
